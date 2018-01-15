@@ -13,6 +13,9 @@ class MainVC: UIViewController {
     @IBOutlet weak var wageTxt: CurrencyTxtField!
     @IBOutlet weak var priceTxt: CurrencyTxtField!
     
+    @IBOutlet weak var resultLabel: UILabel!
+    @IBOutlet weak var hoursLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -23,12 +26,30 @@ class MainVC: UIViewController {
         
         calcBtn.addTarget(self, action: #selector(MainVC.calculate), for: .touchUpInside)
         
-        //wageTxt.inputAccessoryView = calcBtn
         priceTxt.inputAccessoryView = calcBtn
+        
+        resultLabel.isHidden = true
+        hoursLabel.isHidden = true
     }
 
     @objc func calculate() {
-        print("Inside calculate()")
+        if let wageTxt = wageTxt.text, let priceTxt = priceTxt.text {
+            if let wage = Double(wageTxt), let price = Double(priceTxt) {
+                view.endEditing(true)
+                
+                resultLabel.isHidden = false
+                hoursLabel.isHidden = false
+                
+                resultLabel.text = "\(Wage.getHours(forWage: wage, andPrice: price))"
+            }
+        }
+    }
+    
+    @IBAction func clearButton(_ sender: Any) {
+        resultLabel.isHidden = true
+        hoursLabel.isHidden = true
+        wageTxt.text = ""
+        priceTxt.text = ""
     }
 }
 
